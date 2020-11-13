@@ -2,6 +2,9 @@ package com.example.journaling.data
 
 import androidx.room.*
 
+/**
+ * Dao for Responses table
+ */
 @Dao
 interface ResponsesDao {
     @Query("SELECT * FROM responses")

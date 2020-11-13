@@ -21,14 +21,20 @@ import kotlinx.coroutines.withContext
 import java.lang.ClassCastException
 import java.lang.IllegalStateException
 
+/**
+ * Alert Dialog for when a new topic has been added
+ */
+class NewTopicDialog : DialogFragment() {
+    private lateinit var listener: NewTopicAdded
 
-class NewTopicFragment : DialogFragment() {
-    internal lateinit var listener: NewTopicAdded
-
+    // callback interface
     interface NewTopicAdded {
         fun onDialogPositiveClick(dialog: DialogFragment, text: String)
     }
 
+    /**
+     * Sets up the dialog (layout, onclick listeners)
+     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             var builder = AlertDialog.Builder(it)
@@ -47,6 +53,7 @@ class NewTopicFragment : DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
+            // sets up the callback
             listener = context as NewTopicAdded
         } catch (e: ClassCastException) {
             e.printStackTrace()

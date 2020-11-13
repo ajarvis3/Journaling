@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+/**
+ * Contains information about an entry
+ */
 @Entity(foreignKeys = [ForeignKey(entity=Topics::class, parentColumns = arrayOf("name"), childColumns = arrayOf("topic"))])
 class Entries (
     @PrimaryKey val uid: String,

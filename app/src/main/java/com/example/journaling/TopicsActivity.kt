@@ -3,7 +3,6 @@ package com.example.journaling
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 
 
 import android.view.Menu
@@ -18,17 +17,22 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import com.example.journaling.EntriesAdapter as RecyclerAdapter
 
+/**
+ * Activity for a given topic
+ */
 class TopicsActivity : AppCompatActivity() {
     private lateinit var mTopicsRecycler: RecyclerView
     private lateinit var mViewAdapter: RecyclerView.Adapter<*>
     private lateinit var mViewManager: RecyclerView.LayoutManager
 
+    /**
+     * Mostly the same idea as the Journals Activity
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topics)
-        val intent = this.intent
+        // the id of the topic
         val topic = this.intent.getStringExtra("topic") as String
 
         mViewManager = LinearLayoutManager(this)
@@ -36,7 +40,7 @@ class TopicsActivity : AppCompatActivity() {
         GlobalScope.launch (Dispatchers.IO) {
             val db = JournalDatabase.getDb(applicationContext)
             val arr = db.entriesDao().get(topic).toTypedArray()
-            mViewAdapter = com.example.journaling.EntriesAdapter(arr)
+            mViewAdapter = com.example.journaling.TopicsAdapter(arr)
 
             withContext(Dispatchers.Main) {
                 mTopicsRecycler = findViewById<RecyclerView>(R.id.entry_views).apply {
@@ -46,6 +50,7 @@ class TopicsActivity : AppCompatActivity() {
             }
         }
 
+        // Sets up button to add an entry
         val button = findViewById<Button>(R.id.add_entry_button);
         button.setOnClickListener {
             GlobalScope.launch (Dispatchers.IO) {
@@ -65,6 +70,10 @@ class TopicsActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Overridden to get the data again and notify of update to data
+     * Could probably just do this here and never in onCreate
+     */
     override fun onResume() {
         super.onResume()
         if (this::mViewAdapter.isInitialized && mViewAdapter!= null) {
@@ -73,7 +82,7 @@ class TopicsActivity : AppCompatActivity() {
                 val db = JournalDatabase.getDb(applicationContext)
                 val arr = db.entriesDao().get(topic).toTypedArray()
                 withContext (Dispatchers.Main) {
-                    (mViewAdapter as com.example.journaling.EntriesAdapter).setData(arr)
+                    (mViewAdapter as com.example.journaling.TopicsAdapter).setData(arr)
                     mViewAdapter?.notifyDataSetChanged()
                 }
             }

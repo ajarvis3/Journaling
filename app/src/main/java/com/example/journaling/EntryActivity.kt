@@ -18,11 +18,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
+/**
+ * Activity for a given entry
+ */
 class EntryActivity : AppCompatActivity(), NewPromptDialog.NewPromptAdded {
     lateinit var mViewManager: RecyclerView.LayoutManager
     lateinit var mViewAdapter: RecyclerView.Adapter<*>
     lateinit var mRecyclerView: RecyclerView
 
+    // Similar to the Journal and Entries activities
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry)
@@ -48,11 +52,13 @@ class EntryActivity : AppCompatActivity(), NewPromptDialog.NewPromptAdded {
             }
         }
 
+        // Sets up button to add a prompt
         val button = findViewById<Button>(R.id.add_prompt)
         button.setOnClickListener {
             NewPromptDialog().show(supportFragmentManager, null)
         }
 
+        // Saves title if it loses focus
         title.setOnFocusChangeListener { view: View, b: Boolean ->
             val newEntry = Entries(uid, topic, (view as EditText).text.toString())
             GlobalScope.launch (Dispatchers.IO) {
@@ -61,6 +67,7 @@ class EntryActivity : AppCompatActivity(), NewPromptDialog.NewPromptAdded {
             }
         }
 
+        // Save button forces an EditText to lose focus so that its data can be saved
         val save = findViewById<Button>(R.id.save_button_entry) as Button
         save.setOnClickListener {
             val focus = currentFocus
@@ -68,7 +75,9 @@ class EntryActivity : AppCompatActivity(), NewPromptDialog.NewPromptAdded {
         }
      }
 
-
+    /**
+     * Callback for entering a new prompt
+     */
     override fun onDialogPositiveClick(dialog: DialogFragment, text: String) {
         val topic: String = this.intent.getStringExtra("topic")
         val uid: String = UUID.randomUUID().toString()

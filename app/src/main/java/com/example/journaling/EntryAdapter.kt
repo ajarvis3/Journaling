@@ -22,6 +22,11 @@ import java.lang.ClassCastException
 import java.util.*
 import kotlin.math.log
 
+/**
+ * Adapter for an Entry
+ * Each ViewHolder holds a prompt and its response
+ * Same idea as the other adapters
+ */
 class EntryAdapter(private var data: Array<TopicPrompts>, private val context: Context, private val entry: String) : RecyclerView.Adapter<EntryAdapter.MyViewHolder>() {
 
     class MyViewHolder(val myView: View) : RecyclerView.ViewHolder(myView)
@@ -32,8 +37,6 @@ class EntryAdapter(private var data: Array<TopicPrompts>, private val context: C
     }
 
     override fun onBindViewHolder(holder: EntryAdapter.MyViewHolder, position: Int) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         try {
             val view = holder.itemView as ViewGroup
             val textView = view.getChildAt(0) as TextView
@@ -47,12 +50,15 @@ class EntryAdapter(private var data: Array<TopicPrompts>, private val context: C
                 var response: Responses? = db.responsesDao().get(entry, promptId)
 
                 withContext(Dispatchers.Main) {
+                    // Sets EditText's text
                     if (response == null)
                         edittext.setText("")
                     else
                         edittext.setText(response!!.response)
 
                     edittext.setOnFocusChangeListener { _, _ ->
+                        // Create a new response if none was previously created
+                        // Otherwise use same info as old response but update text
                         if (response == null) {
                             val newResponse = Responses(
                                 UUID.randomUUID().toString(),
@@ -86,8 +92,15 @@ class EntryAdapter(private var data: Array<TopicPrompts>, private val context: C
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = data.size
 
+    /**
+     * Getter for data
+     */
     fun getData() = data
 
+    /**
+     * Updates the data
+     * @param newData the updated data
+     */
     fun setData(newData: Array<TopicPrompts>) {
         data = newData
     }

@@ -11,13 +11,20 @@ import androidx.fragment.app.DialogFragment
 import java.lang.ClassCastException
 import java.lang.IllegalStateException
 
+/**
+ * Alert Dialog for a new prompt
+ */
 class NewPromptDialog : DialogFragment() {
-    internal lateinit var listener: NewPromptAdded
+    private lateinit var listener: NewPromptAdded
 
+    // callback interface
     interface NewPromptAdded {
         fun onDialogPositiveClick(dialog: DialogFragment, text: String)
     }
 
+    /**
+     * Sets up the dialog (layout, onClcik listeners)
+     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             var builder = AlertDialog.Builder(it)
@@ -36,6 +43,7 @@ class NewPromptDialog : DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
+            // set up the callback
             listener = context as NewPromptAdded
         } catch (e: ClassCastException) {
             e.printStackTrace()

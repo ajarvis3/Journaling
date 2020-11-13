@@ -5,6 +5,9 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
+/**
+ * Dao for TopicPrompts table
+ */
 @Dao
 interface TopicPromptsDao {
     @Query("SELECT * FROM topicprompts")

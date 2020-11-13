@@ -5,6 +5,9 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
+/**
+ * Dao for Topics table
+ */
 @Dao
 interface TopicsDao {
     @Query("SELECT * FROM topics")
